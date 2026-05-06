@@ -1,16 +1,23 @@
 import webbrowser
 import os
+from .base import ToolResult
+from .registry import registry
+from .utils import sanitize_path
 
-def open_in_browser(file_path: str) -> str:
+def open_in_browser(file_path: str) -> ToolResult:
     """
-    Converts path to absolute and opens it in the default browser.
+    Opens the file in the default browser if it exists in the output directory.
     """
     try:
-        abs_path = os.path.abspath(file_path)
-        if not os.path.exists(abs_path):
-            return f"Error: File '{file_path}' does not exist at {abs_path}"
+        target_path = sanitize_path(file_path)
+            
+        if not os.path.exists(target_path):
+            return ToolResult(success=False, error=f"File '{file_path}' not found at {target_path}")
         
-        webbrowser.open(f"file://{abs_path}")
-        return f"Opened '{file_path}' in browser."
+        webbrowser.open(f"file://{target_path}")
+        return ToolResult(success=True, data=f"Opened '{file_path}' in browser.")
     except Exception as e:
-        return f"Error opening browser: {str(e)}"
+        return ToolResult(success=False, error=f"Browser Error: {str(e)}")
+
+# Register tool
+registry.register("open_in_browser", open_in_browser)

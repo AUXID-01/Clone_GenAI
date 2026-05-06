@@ -1,0 +1,1 @@
+2026-05-06 21:01:38,489 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 429 Too Many Requests"

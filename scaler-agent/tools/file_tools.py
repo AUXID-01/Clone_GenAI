@@ -1,56 +1,54 @@
 import os
+from .base import ToolResult
+from .registry import registry
+from .utils import sanitize_path
 
-def create_folder(folder_path: str) -> str:
-    """
-    Creates a folder at the given path.
-    """
+def create_folder(folder_path: str) -> ToolResult:
     try:
-        os.makedirs(folder_path, exist_ok=True)
-        return f"Folder '{folder_path}' created successfully or already exists."
+        sanitized_path = sanitize_path(folder_path)
+        os.makedirs(sanitized_path, exist_ok=True)
+        return ToolResult(success=True, data=f"Folder '{folder_path}' created.")
     except Exception as e:
-        return f"Error creating folder '{folder_path}': {str(e)}"
+        return ToolResult(success=False, error=str(e))
 
-def create_file(file_path: str, content: str) -> str:
-    """
-    Creates a file with the given content, automatically creating parent directories.
-    """
+def create_file(file_path: str, content: str) -> ToolResult:
     try:
-        # Ensure parent directory exists
-        parent_dir = os.path.dirname(file_path)
-        if parent_dir:
-            os.makedirs(parent_dir, exist_ok=True)
+        sanitized_path = sanitize_path(file_path)
+        parent_dir = os.path.dirname(sanitized_path)
+        os.makedirs(parent_dir, exist_ok=True)
         
-        with open(file_path, "w", encoding="utf-8") as f:
+        with open(sanitized_path, "w", encoding="utf-8") as f:
             f.write(content)
-        return f"File '{file_path}' created successfully."
+        return ToolResult(success=True, data=f"File '{file_path}' created.")
     except Exception as e:
-        return f"Error creating file '{file_path}': {str(e)}"
+        return ToolResult(success=False, error=str(e))
 
-def append_file(file_path: str, content: str) -> str:
-    """
-    Appends content to an existing file.
-    """
+def append_file(file_path: str, content: str) -> ToolResult:
     try:
-        if not os.path.exists(file_path):
-            return f"Error: File '{file_path}' does not exist. Use create_file first."
+        sanitized_path = sanitize_path(file_path)
+        if not os.path.exists(sanitized_path):
+            return ToolResult(success=False, error=f"File '{file_path}' does not exist.")
         
-        with open(file_path, "a", encoding="utf-8") as f:
+        with open(sanitized_path, "a", encoding="utf-8") as f:
             f.write(content)
-        return f"Content appended to '{file_path}' successfully."
+        return ToolResult(success=True, data=f"Content appended to '{file_path}'.")
     except Exception as e:
-        return f"Error appending to file '{file_path}': {str(e)}"
+        return ToolResult(success=False, error=str(e))
 
-def read_file(file_path: str) -> str:
-    """
-    Reads the content of a file.
-    """
+def read_file(file_path: str) -> ToolResult:
     try:
-        if not os.path.exists(file_path):
-            return f"Error: File '{file_path}' does not exist."
+        sanitized_path = sanitize_path(file_path)
+        if not os.path.exists(sanitized_path):
+            return ToolResult(success=False, error=f"File '{file_path}' does not exist.")
         
-        with open(file_path, "r", encoding="utf-8") as f:
-            return f.read()
+        with open(sanitized_path, "r", encoding="utf-8") as f:
+            content = f.read()
+        return ToolResult(success=True, data=content)
     except Exception as e:
-        return f"Error reading file '{file_path}': {str(e)}"
+        return ToolResult(success=False, error=str(e))
 
-
+# Register tools
+registry.register("create_folder", create_folder)
+registry.register("create_file", create_file)
+registry.register("append_file", append_file)
+registry.register("read_file", read_file)
