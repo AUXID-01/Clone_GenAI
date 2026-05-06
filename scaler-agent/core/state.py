@@ -22,7 +22,7 @@ class Task(BaseModel):
 class ToolTrace(BaseModel):
     tool_name: str
     tool_args: Dict[str, Any]
-    observation: str
+    observation: Any
     success: bool
     timestamp: datetime = Field(default_factory=datetime.now)
 

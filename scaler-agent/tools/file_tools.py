@@ -52,7 +52,11 @@ def download_asset(url: str, file_path: str = None) -> ToolResult:
     """
     Downloads a file from a URL and saves it to the specified path within the output directory.
     If file_path is not provided, it attempts to derive one from the URL.
+    Uses browser headers to bypass simple bot protection.
     """
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+    }
     try:
         if not file_path:
             # Derive filename from URL
@@ -65,7 +69,7 @@ def download_asset(url: str, file_path: str = None) -> ToolResult:
         # Ensure assets directory exists if the path implies it
         os.makedirs(os.path.dirname(sanitized_path), exist_ok=True)
         
-        response = requests.get(url, stream=True, timeout=10)
+        response = requests.get(url, headers=headers, stream=True, timeout=15)
         response.raise_for_status()
         
         with open(sanitized_path, 'wb') as f:

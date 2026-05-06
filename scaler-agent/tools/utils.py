@@ -13,8 +13,8 @@ def sanitize_path(path: str) -> str:
     if normalized_path.startswith("output/"):
         path = path[len("output/"):]
     
-    # Normalize path and join with base_dir
-    target_path = os.path.abspath(os.path.join(base_dir, path))
+    # Normalize path and join with base_dir (strip leading slashes to prevent absolute path escapes)
+    target_path = os.path.abspath(os.path.join(base_dir, path.lstrip("/\\")))
     
     if not target_path.startswith(base_dir):
         raise ValueError(f"Access denied: Path '{path}' is outside the sandbox.")

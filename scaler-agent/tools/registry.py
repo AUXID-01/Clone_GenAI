@@ -27,7 +27,7 @@ class ToolRegistry:
         
         # Fuzzy mapping for common argument name hallucinations
         fuzzy_map = {
-            "file_path": ["filename", "path", "filepath", "folder_path"],
+            "file_path": ["filename", "file_name", "path", "filepath", "folder_path"],
             "folder_path": ["directory", "path", "folder"],
             "content": ["data", "text", "body"]
         }
