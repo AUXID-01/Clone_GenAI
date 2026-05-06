@@ -139,6 +139,15 @@ class AgentRuntime:
                     })
                     
                 elif step == "OUTPUT":
+                    # Safety check: Is the plan actually finished?
+                    plan = data.get("plan", [])
+                    pending_tasks = [t for t in plan if t.get("status") == "pending"]
+                    
+                    if pending_tasks:
+                        print(f"\n[\033[93mWARNING\033[0m] Agent tried to finish early with {len(pending_tasks)} pending tasks.")
+                        self.state.add_history("user", f"You tried to finish but you still have pending tasks: {[t['title'] for t in pending_tasks]}. Please continue with the next task.")
+                        continue
+                    
                     print(f"\n[\033[95mOUTPUT\033[0m] {data.get('content', 'Objective complete.')}")
                     break
                 

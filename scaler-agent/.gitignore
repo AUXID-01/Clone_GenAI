@@ -19,6 +19,7 @@ htmlcov/
 
 # Project Specific
 output/
+logs/
 scaler_clone/
 scaler-academy-clone/
 "Scaler Website"/

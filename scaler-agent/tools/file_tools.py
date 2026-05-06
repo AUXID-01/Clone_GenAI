@@ -1,4 +1,5 @@
 import os
+import requests
 from .base import ToolResult
 from .registry import registry
 from .utils import sanitize_path
@@ -47,8 +48,37 @@ def read_file(file_path: str) -> ToolResult:
     except Exception as e:
         return ToolResult(success=False, error=str(e))
 
+def download_asset(url: str, file_path: str = None) -> ToolResult:
+    """
+    Downloads a file from a URL and saves it to the specified path within the output directory.
+    If file_path is not provided, it attempts to derive one from the URL.
+    """
+    try:
+        if not file_path:
+            # Derive filename from URL
+            filename = url.split("/")[-1].split("?")[0]
+            if not filename:
+                filename = "downloaded_asset"
+            file_path = f"assets/{filename}"
+            
+        sanitized_path = sanitize_path(file_path)
+        # Ensure assets directory exists if the path implies it
+        os.makedirs(os.path.dirname(sanitized_path), exist_ok=True)
+        
+        response = requests.get(url, stream=True, timeout=10)
+        response.raise_for_status()
+        
+        with open(sanitized_path, 'wb') as f:
+            for chunk in response.iter_content(chunk_size=8192):
+                f.write(chunk)
+        
+        return ToolResult(success=True, data=f"Asset downloaded successfully to '{file_path}'.")
+    except Exception as e:
+        return ToolResult(success=False, error=f"Download failed: {str(e)}")
+
 # Register tools
 registry.register("create_folder", create_folder)
 registry.register("create_file", create_file)
 registry.register("append_file", append_file)
 registry.register("read_file", read_file)
+registry.register("download_asset", download_asset)

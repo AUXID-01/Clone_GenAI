@@ -1,43 +1,45 @@
-# Scaler Agent — CLI Tool (NVIDIA NIM Edition)
+# Scaler Agent: Autonomous Web Cloner
 
-A conversational CLI AI agent that builds a high-quality clone of the Scaler Academy website using natural language instructions, powered by NVIDIA NIM and Llama 3.3.
+An advanced, autonomous AI agent designed to create high-fidelity, pixel-perfect clones of modern websites, specifically optimized for Scaler.com.
 
-## 🚀 Features
-- **Loop-based Reasoning**: Follows a START → THINK → TOOL → OBSERVE → OUTPUT workflow.
-- **Powered by NVIDIA NIM**: Extremely fast inference using Llama 3.3 70B via NVIDIA's API.
-- **Dynamic File Generation**: Generates responsive HTML/CSS/JS files inside an `output/` folder.
-- **In-Browser Preview**: Automatically opens the generated website in your default browser.
-- **Color-coded Logs**: Clearly prints agent steps for transparency during the reasoning process.
+## 🚀 Key Features
+- **Sequential Building**: Enforces a strict top-to-bottom section build to maintain quality.
+- **Asset Pipeline**: Automatically searches for, downloads, and integrates real media (logos, videos).
+- **High-Fidelity Extraction**: Fetches live HTML from target sites to ensure accurate text and structure.
+- **Interactive JS**: Mandates the creation of JavaScript for animations and UI logic.
+- **Autonomous Recovery**: Self-corrects tool errors and JSON parsing hallucinations.
 
-## 🛠️ Setup Instructions
+## 🛠️ Tech Stack
+- **Reasoning**: Meta Llama 3.3 / OpenRouter / Groq
+- **Validation**: Pydantic
+- **Language**: Python 3.11+
+- **Styling**: Vanilla CSS (Glassmorphism, Inter Fonts)
 
-1. **Install Dependencies**:
+## 📦 Setup & Installation
+
+1. **Clone & Virtual Env**:
    ```bash
+   python -m venv venv
+   source venv/bin/activate  # venv\Scripts\activate on Windows
    pip install -r requirements.txt
    ```
 
-2. **Configure API Key**:
-   Create a `.env` file in the root directory and add your NVIDIA API key:
+2. **Environment Variables**:
+   Create a `.env` file with:
    ```env
-   NVIDIA_API_KEY=your_nvidia_api_key_here
+   OPENROUTER_API_KEY=your_key_here
    ```
 
-3. **Run the Agent**:
-   ```bash
-   python main.py
-   ```
+## 🎮 Usage
+Run the main entry point:
+```bash
+python main.py
+```
+**Recommended Objective**: 
+> "Execute the 5-Phase 50% Fidelity Plan. Start by extracting content from scaler.com and building the foundation."
 
-## 💬 Example Prompts
-- "Clone the Scaler website and open it in my browser."
-- "Create a Scaler landing page clone with a dark theme and orange call-to-action buttons."
-- "Build the Scaler hero section and footer, and save it to output/scaler.html."
-
-## 📁 Folder Structure
-- `main.py`: Conversational loop entry point.
-- `agent.py`: Core reasoning brain using NVIDIA NIM (OpenAI-compatible) SDK.
-- `tools/`: Python functions for file creation and browser control.
-- `prompts/`: System instructions for the LLM.
-- `output/`: Directory where all generated files are stored.
-
-## 📝 Note
-This agent uses the NVIDIA NIM API (OpenAI-compatible) and requires an active internet connection and a valid API key.
+## 📁 Architecture
+- `/core`: Runtime logic, state management, and error recovery.
+- `/prompts`: The "Master Prompt" and system instructions.
+- `/tools`: Registry of capabilities (Search, Fetch, Download, Browser).
+- `/output`: The final sandboxed clone (HTML/CSS/JS/Assets).
