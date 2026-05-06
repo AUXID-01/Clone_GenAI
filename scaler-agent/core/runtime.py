@@ -76,7 +76,18 @@ class AgentRuntime:
                     raise ValueError(error_msg)
 
                 try:
-                    data = json.loads(raw_content)
+                    # Robust JSON extraction to handle markdown blocks
+                    content_to_parse = raw_content.strip()
+                    if content_to_parse.startswith("```"):
+                        # Extract content between triple backticks
+                        lines = content_to_parse.splitlines()
+                        if lines[0].startswith("```"):
+                            lines = lines[1:]
+                        if lines and lines[-1].startswith("```"):
+                            lines = lines[:-1]
+                        content_to_parse = "\n".join(lines).strip()
+                    
+                    data = json.loads(content_to_parse)
                 except json.JSONDecodeError as e:
                     print(f"[\033[91mERROR\033[0m] Failed to parse JSON: {str(e)}")
                     print(f"[\033[90mDEBUG\033[0m] Raw Content: {raw_content}")
