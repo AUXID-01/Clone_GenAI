@@ -1,0 +1,24 @@
+# Environment
+.env
+venv/
+.venv/
+env/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDEs
+.vscode/
+.idea/
+
+# Project Specific
+output/
+scaler_clone/
+scaler-academy-clone/
+"Scaler Website"/
